@@ -14,24 +14,25 @@ datasource db {
 }
 
 model User {
-  id            String     @id @default(uuid())
-  password      String
-  email         String     @unique
-  contactNumber String?
-  name          String?
-  role          UserRoles  @default(VISITOR)
-  status        UserStatus @default(ACTIVE)
-  createdAt     DateTime   @default(now())
-  updatedAt     DateTime   @updatedAt
-  admin         Admin?
+  id                 String     @id @default(uuid())
+  password           String
+  email              String     @unique
+  role               UserRoles  @default(APPLICANT)
+  status             UserStatus @default(ACTIVE)
+  needPasswordChange Boolean    @default(true)
+  createdAt          DateTime   @default(now())
+  updatedAt          DateTime   @updatedAt
+  admin              Admin?
 
   @@map("users")
 }
 
 model Admin {
   id               String   @id @default(uuid())
+  name             String   @default("unknown")
   email            String   @unique
-  photo            String?
+  contactNo        String
+  profilePhoto     String?
   presentAddress   String
   permanentAddress String
   nid              String   @unique
@@ -49,13 +50,11 @@ model Admin {
 enum UserRoles {
   SUPERADMIN
   ADMIN
-  SECTION
-  MODERATOR
-  INSTRUCTOR
-  STUDENT
-  DEPARTMENT
-  STUFF
-  VISITOR
+  MODARETOR
+  COMPANY // MOST OF THE TIME THE HR
+  INTERVIEWER
+  SELECTOR //SHORT LISTED RESUMES
+  APPLICANT
 }
 
 enum UserStatus {

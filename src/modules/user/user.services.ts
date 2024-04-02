@@ -13,7 +13,9 @@ const createAdmin = async (payload: any) => {
   };
 
   const adminData = {
+    name: payload.name,
     email: payload.email,
+    contactNo: payload.contactNo,
     presentAddress: payload.presentAddress,
     permanentAddress: payload.permanentAddress,
     nid: payload.nid,

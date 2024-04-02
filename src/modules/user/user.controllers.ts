@@ -1,14 +1,22 @@
 import { Request, Response } from "express";
 import { userServices } from "./user.services";
+import response from "../../utilities/response";
 
 const createAdmin = async (req: Request, res: Response) => {
-  const payload = req.body;
+  try {
+    const payload = req.body;
 
-  const result = await userServices.createAdmin(payload);
+    const result = await userServices.createAdmin(payload);
 
-  res.send({
-    data: result,
-  });
+    response(res, {
+      statusCode: 200,
+      success: true,
+      message: "admin created",
+      data: result,
+    });
+  } catch (err) {
+    console.log(err);
+  }
 };
 
 export const userControllers = {
