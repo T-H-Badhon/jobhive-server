@@ -38,7 +38,26 @@ const oneAdmin = async (req: Request, res: Response) => {
   }
 };
 
+const updateAdmin = async (req: Request, res: Response) => {
+  const id = req.params.id;
+  const updateData = req.body;
+
+  try {
+    const result = await adminServices.updateAdmin(id, updateData);
+
+    response(res, {
+      statusCode: 200,
+      success: true,
+      message: "Admin updated successfully!",
+      data: result,
+    });
+  } catch (err) {
+    console.log(err);
+  }
+};
+
 export const adminControllers = {
   allAdmins,
   oneAdmin,
+  updateAdmin,
 };

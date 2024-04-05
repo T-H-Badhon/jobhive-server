@@ -1,4 +1,4 @@
-import { Prisma, PrismaClient } from "@prisma/client";
+import { Admin, Prisma, PrismaClient } from "@prisma/client";
 import querybuilder from "../../utilities/queryBuilder";
 import paginationandSorting from "../../utilities/pagination&sorting";
 
@@ -42,7 +42,18 @@ const oneAdmin = async (id: string) => {
   return result;
 };
 
+const updateAdmin = async (id: string, updateData: Partial<Admin>) => {
+  const result = await prisma.admin.update({
+    where: {
+      id: id,
+    },
+    data: updateData,
+  });
+  return result;
+};
+
 export const adminServices = {
   allAdmins,
   oneAdmin,
+  updateAdmin,
 };
