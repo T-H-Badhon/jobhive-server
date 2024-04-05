@@ -13,6 +13,24 @@ const allAdmins = async (req: Request, res: Response) => {
       statusCode: 200,
       success: true,
       message: " All admins fetch successfully!",
+      meta: result.meta,
+      data: result.data,
+    });
+  } catch (err) {
+    console.log(err);
+  }
+};
+
+const oneAdmin = async (req: Request, res: Response) => {
+  const id = req.params.id;
+
+  try {
+    const result = await adminServices.oneAdmin(id);
+
+    response(res, {
+      statusCode: 200,
+      success: true,
+      message: "Admin data fetched successfully!",
       data: result,
     });
   } catch (err) {
@@ -22,4 +40,5 @@ const allAdmins = async (req: Request, res: Response) => {
 
 export const adminControllers = {
   allAdmins,
+  oneAdmin,
 };

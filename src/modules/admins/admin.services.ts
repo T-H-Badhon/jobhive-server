@@ -15,13 +15,34 @@ const allAdmins = async (query: any) => {
     skip: (page - 1) * limit,
     take: limit,
     orderBy: {
-      [sortBy]: sortOrder,
+      [sortBy as string]: sortOrder,
     },
   });
 
+  const total = await prisma.admin.count({
+    where: { AND: andWhere },
+  });
+
+  return {
+    meta: {
+      total,
+      page,
+      limit,
+    },
+    data: result,
+  };
+};
+
+const oneAdmin = async (id: string) => {
+  const result = await prisma.admin.findUnique({
+    where: {
+      id: id,
+    },
+  });
   return result;
 };
 
 export const adminServices = {
   allAdmins,
+  oneAdmin,
 };
