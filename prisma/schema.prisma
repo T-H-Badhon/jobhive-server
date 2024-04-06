@@ -38,6 +38,7 @@ model Admin {
   nid              String   @unique
   guardian         String
   guardianAddress  String
+  isDeleted        Boolean  @default(false)
   createdAt        DateTime @default(now())
   updatedAt        DateTime @updatedAt
 
@@ -60,4 +61,5 @@ enum UserRoles {
 enum UserStatus {
   ACTIVE
   BLOCKED
+  DELETED
 }

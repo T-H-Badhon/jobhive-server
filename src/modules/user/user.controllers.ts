@@ -1,6 +1,7 @@
 import { Request, Response } from "express";
 import { userServices } from "./user.services";
 import response from "../../utilities/response";
+import httpStatus from "http-status";
 
 const createAdmin = async (req: Request, res: Response) => {
   try {
@@ -9,7 +10,7 @@ const createAdmin = async (req: Request, res: Response) => {
     const result = await userServices.createAdmin(payload);
 
     response(res, {
-      statusCode: 200,
+      statusCode: httpStatus.OK,
       success: true,
       message: "admin created",
       data: result,

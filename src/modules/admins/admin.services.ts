@@ -1,4 +1,4 @@
-import { Admin, Prisma, PrismaClient } from "@prisma/client";
+import { Admin, Prisma, PrismaClient, UserStatus } from "@prisma/client";
 import querybuilder from "../../utilities/queryBuilder";
 import paginationandSorting from "../../utilities/pagination&sorting";
 
@@ -74,9 +74,38 @@ const deleteAdmin = async (id: string) => {
   return result;
 };
 
+const deleteMe = async (email: string) => {
+  const result = await prisma.$transaction(async (tx) => {
+    const deleteAdmin = await tx.admin.update({
+      where: {
+        email: email,
+      },
+      data: {
+        isDeleted: true,
+      },
+    });
+
+    const deleteUser = await tx.user.update({
+      where: {
+        email: email,
+      },
+      data: {
+        status: UserStatus.DELETED,
+      },
+    });
+
+    return {
+      message: "softly deleted",
+    };
+  });
+
+  return result;
+};
+
 export const adminServices = {
   allAdmins,
   oneAdmin,
   updateAdmin,
   deleteAdmin,
+  deleteMe,
 };
