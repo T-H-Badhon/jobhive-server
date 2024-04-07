@@ -1,6 +1,7 @@
 import app from "./app";
+import { configs } from "./config/config";
 
-const port = 5000;
+const port = Number(configs.port);
 
 const main = async () => {
   app.listen(port, () => {
