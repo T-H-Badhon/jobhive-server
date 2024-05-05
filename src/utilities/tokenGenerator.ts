@@ -10,6 +10,19 @@ const ac_token = (tokenInfo: { email: string; role: string }) => {
   return token;
 };
 
+const verifyAC_Token = async (token: string) => {
+  try {
+    const decoded = jwt.verify(
+      token,
+      configs.ac_secret as string
+    ) as JwtPayload;
+
+    return decoded;
+  } catch (err) {
+    throw new Error("You are not authorized!!");
+  }
+};
+
 const refresh_token = (tokenInfo: { email: string; role: string }) => {
   const token = jwt.sign(tokenInfo, configs.refresh_secret as string, {
     algorithm: "HS256",
@@ -19,7 +32,7 @@ const refresh_token = (tokenInfo: { email: string; role: string }) => {
   return token;
 };
 
-const verifyToken = async (token: string) => {
+const verifyR_Token = async (token: string) => {
   try {
     const decoded = jwt.verify(
       token,
@@ -34,6 +47,7 @@ const verifyToken = async (token: string) => {
 
 export const jwtToken = {
   ac_token,
+  verifyAC_Token,
   refresh_token,
-  verifyToken,
+  verifyR_Token,
 };

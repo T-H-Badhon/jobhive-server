@@ -35,7 +35,7 @@ const login = async (payload: TLogin) => {
 };
 
 const loginByR_token = async (token: string) => {
-  const decodedData = await jwtToken.verifyToken(token);
+  const decodedData = await jwtToken.verifyR_Token(token);
 
   const userData = await prisma.user.findUnique({
     where: {

@@ -11,7 +11,7 @@ export const globalErrorhandler = (
   res.status(500).json({
     statusCode: 500,
     success: false,
-    errorMessage: "something went wrong",
+    errorMessage: err.message || "something went wrong",
     error: err,
   });
 };
