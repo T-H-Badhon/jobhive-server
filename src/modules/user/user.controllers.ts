@@ -6,8 +6,9 @@ import httpStatus from "http-status";
 const createAdmin = async (req: Request, res: Response) => {
   try {
     const payload = req.body;
+    const photoDirectory = req.file?.path || "";
 
-    const result = await userServices.createAdmin(payload);
+    const result = await userServices.createAdmin(payload, photoDirectory);
 
     response(res, {
       statusCode: httpStatus.OK,

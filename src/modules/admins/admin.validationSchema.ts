@@ -1,6 +1,6 @@
 import { z } from "zod";
 
-export const adminUpdateSchema = z.object({
+export const zodAdminUpdateSchema = z.object({
   body: z.object({
     name: z.string().optional(),
     contactNo: z.string().optional(),

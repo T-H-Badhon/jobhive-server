@@ -1,7 +1,7 @@
 import { Router } from "express";
 import { adminControllers } from "./admin.controllers";
 import zodValidation from "../../middlewares/zodValidation";
-import { adminUpdateSchema } from "./admin.validationSchema";
+import { zodAdminUpdateSchema } from "./admin.validationSchema";
 import { UserRoles } from "@prisma/client";
 import auth from "../../middlewares/auth";
 
@@ -23,7 +23,7 @@ router.patch("/me", auth(UserRoles.ADMIN)); //self update
 router.patch(
   "/:id",
   auth(UserRoles.SUPERADMIN),
-  zodValidation(adminUpdateSchema),
+  zodValidation(zodAdminUpdateSchema),
   adminControllers.updateAdmin
 );
 
