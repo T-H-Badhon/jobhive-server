@@ -13,4 +13,7 @@ export const configs = {
   reset_exp: process.env.RESET_EXP,
   senderEmail: process.env.EMAIL,
   app_pass: process.env.APP_SECRET,
+  cloud_name: process.env.CLOUD_NAME,
+  api_key: process.env.API_KEY,
+  api_secret: process.env.API_SECRET,
 };
