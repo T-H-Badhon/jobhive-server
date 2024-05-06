@@ -73,16 +73,15 @@ model Modaretor {
 }
 
 model Company {
-  id               String   @id @default(uuid())
-  company          String   @default("unknown")
-  email            String   @unique
-  contactNo        String
-  companyLogo      String?
-  presentAddress   String
-  permanentAddress String
-  isDeleted        Boolean  @default(false)
-  createdAt        DateTime @default(now())
-  updatedAt        DateTime @updatedAt
+  id          String   @id @default(uuid())
+  company     String   @default("unknown")
+  email       String   @unique
+  contactNo   String
+  companyLogo String?
+  address     String
+  isDeleted   Boolean  @default(false)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
 
   user User @relation(fields: [email], references: [email])
 
@@ -130,19 +129,18 @@ model Selector {
 }
 
 model Applicant {
-  id               String   @id @default(uuid())
-  name             String   @default("unknown")
-  email            String   @unique
+  id               String           @id @default(uuid())
+  email            String           @unique
+  name             String           @default("unknown")
   contactNo        String
   profilePhoto     String?
-  presentAddress   String
-  permanentAddress String
-  nid              String   @unique
-  guardian         String
-  guardianAddress  String
-  isDeleted        Boolean  @default(false)
-  createdAt        DateTime @default(now())
-  updatedAt        DateTime @updatedAt
+  married          Boolean
+  address          String
+  employmentStatus EmploymentStatus
+  graduated        Boolean
+  isDeleted        Boolean          @default(false)
+  createdAt        DateTime         @default(now())
+  updatedAt        DateTime         @updatedAt
 
   user User @relation(fields: [email], references: [email])
 
@@ -164,4 +162,9 @@ enum UserStatus {
   ACTIVE
   BLOCKED
   DELETED
+}
+
+enum EmploymentStatus {
+  WORKING
+  UNEMPLOYED
 }

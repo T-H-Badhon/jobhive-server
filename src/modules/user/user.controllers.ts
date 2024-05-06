@@ -77,9 +77,48 @@ const createSelector = async (req: Request, res: Response) => {
     console.log(err);
   }
 };
+
+const createApplicant = async (req: Request, res: Response) => {
+  try {
+    const payload = req.body;
+    const photoDirectory = req.file?.path || "";
+
+    const result = await userServices.createApplicant(payload, photoDirectory);
+
+    response(res, {
+      statusCode: httpStatus.OK,
+      success: true,
+      message: "Your account created Successfully",
+      data: result,
+    });
+  } catch (err) {
+    console.log(err);
+  }
+};
+
+const createCompany = async (req: Request, res: Response) => {
+  try {
+    const payload = req.body;
+    const photoDirectory = req.file?.path || "";
+
+    const result = await userServices.createCompany(payload, photoDirectory);
+
+    response(res, {
+      statusCode: httpStatus.OK,
+      success: true,
+      message: "Your account created Successfully",
+      data: result,
+    });
+  } catch (err) {
+    console.log(err);
+  }
+};
+
 export const userControllers = {
   createAdmin,
   createModaretor,
   createInterviewer,
   createSelector,
+  createApplicant,
+  createCompany,
 };

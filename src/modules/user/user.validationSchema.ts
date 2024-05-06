@@ -1,3 +1,4 @@
+import { EmploymentStatus } from "@prisma/client";
 import { z } from "zod";
 
 export const zodAdminCreateSchema = z.object({
@@ -64,8 +65,7 @@ export const zodCompanyCreateSchema = z.object({
     password: z.string(),
     company: z.string(),
     contactNo: z.string(),
-    presentAddress: z.string(),
-    permanentAddress: z.string(),
+    address: z.string(),
   }),
 });
 
@@ -73,12 +73,14 @@ export const zodApplicantCreateSchema = z.object({
   body: z.object({
     email: z.string(),
     password: z.string(),
-    nid: z.string(),
     name: z.string(),
     contactNo: z.string(),
-    presentAddress: z.string(),
-    permanentAddress: z.string(),
-    guardian: z.string(),
-    guardianAddress: z.string(),
+    married: z.boolean(),
+    address: z.string(),
+    employmentStatus: z.enum([
+      EmploymentStatus.WORKING,
+      EmploymentStatus.UNEMPLOYED,
+    ]),
+    graduated: z.boolean(),
   }),
 });

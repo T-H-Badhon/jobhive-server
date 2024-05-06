@@ -54,14 +54,14 @@ router.post(
   fileUpload.upload.single("file"),
   formdataModifier(),
   zodValidation(zodApplicantCreateSchema),
-  userControllers.createAdmin
+  userControllers.createApplicant
 );
 router.post(
   "/create-company",
   fileUpload.upload.single("file"),
   formdataModifier(),
   zodValidation(zodCompanyCreateSchema),
-  userControllers.createAdmin
+  userControllers.createCompany
 );
 
 export const userRoutes = router;

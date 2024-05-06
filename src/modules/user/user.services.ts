@@ -172,9 +172,90 @@ const createSelector = async (payload: any, photoDirectory: string) => {
   return { selector: result };
 };
 
+const createApplicant = async (payload: any, photoDirectory: string) => {
+  const photolink = (await fileUpload.upload_to_cloudinary(
+    photoDirectory,
+    payload.nid
+  )) as string;
+
+  console.log(photolink);
+  const hashPassword = bcrypt.hashSync(payload.password, 12);
+
+  const userData = {
+    password: hashPassword,
+    email: payload.email,
+    role: UserRoles.APPLICANT,
+  };
+
+  const applicantData = {
+    name: payload.name,
+    email: payload.email,
+    contactNo: payload.contactNo,
+    married: payload.married,
+    address: payload.address,
+    profilePhoto: photolink,
+    employmentStatus: payload.employmentStatus,
+    graduated: payload.graduated,
+  };
+
+  const result = await prisma.$transaction(async (tx) => {
+    const user = await tx.user.create({
+      data: userData,
+    });
+
+    const applicant = await tx.applicant.create({
+      data: applicantData,
+    });
+
+    return applicant;
+  });
+
+  return { applicant: result };
+};
+
+const createCompany = async (payload: any, photoDirectory: string) => {
+  const logolink = (await fileUpload.upload_to_cloudinary(
+    photoDirectory,
+    payload.nid
+  )) as string;
+
+  console.log(logolink);
+  const hashPassword = bcrypt.hashSync(payload.password, 12);
+
+  const userData = {
+    password: hashPassword,
+    email: payload.email,
+    role: UserRoles.COMPANY,
+  };
+
+  const companyData = {
+    email: payload.email,
+    company: payload.company,
+    contactNo: payload.contactNo,
+    address: payload.address,
+    companyLogo: logolink,
+  };
+
+  const result = await prisma.$transaction(async (tx) => {
+    const user = await tx.user.create({
+      data: userData,
+    });
+
+    const company = await tx.company.create({
+      data: companyData,
+    });
+
+    return company;
+  });
+
+  return { company: result };
+};
+
 export const userServices = {
   createAdmin,
   createModaretor,
   createInterviewer,
   createSelector,
+  createApplicant,
+  createCompany,
 };
