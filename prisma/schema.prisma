@@ -14,15 +14,20 @@ datasource db {
 }
 
 model User {
-  id                 String     @id @default(uuid())
+  id                 String       @id @default(uuid())
   password           String
-  email              String     @unique
-  role               UserRoles  @default(APPLICANT)
-  status             UserStatus @default(ACTIVE)
-  needPasswordChange Boolean    @default(true)
-  createdAt          DateTime   @default(now())
-  updatedAt          DateTime   @updatedAt
+  email              String       @unique
+  role               UserRoles    @default(APPLICANT)
+  status             UserStatus   @default(ACTIVE)
+  needPasswordChange Boolean      @default(true)
+  createdAt          DateTime     @default(now())
+  updatedAt          DateTime     @updatedAt
   admin              Admin?
+  modaretor          Modaretor?
+  company            Company?
+  interviewer        Interviewer?
+  selector           Selector?
+  applicant          Applicant?
 
   @@map("users")
 }
@@ -45,6 +50,103 @@ model Admin {
   user User @relation(fields: [email], references: [email])
 
   @@map("admins")
+}
+
+model Modaretor {
+  id               String   @id @default(uuid())
+  name             String   @default("unknown")
+  email            String   @unique
+  contactNo        String
+  profilePhoto     String?
+  presentAddress   String
+  permanentAddress String
+  nid              String   @unique
+  guardian         String
+  guardianAddress  String
+  isDeleted        Boolean  @default(false)
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+
+  user User @relation(fields: [email], references: [email])
+
+  @@map("modaretors")
+}
+
+model Company {
+  id               String   @id @default(uuid())
+  company          String   @default("unknown")
+  email            String   @unique
+  contactNo        String
+  companyLogo      String?
+  presentAddress   String
+  permanentAddress String
+  isDeleted        Boolean  @default(false)
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+
+  user User @relation(fields: [email], references: [email])
+
+  @@map("companies")
+}
+
+model Interviewer {
+  id               String   @id @default(uuid())
+  name             String   @default("unknown")
+  email            String   @unique
+  contactNo        String
+  profilePhoto     String?
+  presentAddress   String
+  permanentAddress String
+  nid              String   @unique
+  guardian         String
+  guardianAddress  String
+  isDeleted        Boolean  @default(false)
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+
+  user User @relation(fields: [email], references: [email])
+
+  @@map("interviewers")
+}
+
+model Selector {
+  id               String   @id @default(uuid())
+  name             String   @default("unknown")
+  email            String   @unique
+  contactNo        String
+  profilePhoto     String?
+  presentAddress   String
+  permanentAddress String
+  nid              String   @unique
+  guardian         String
+  guardianAddress  String
+  isDeleted        Boolean  @default(false)
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+
+  user User @relation(fields: [email], references: [email])
+
+  @@map("selectors")
+}
+
+model Applicant {
+  id               String   @id @default(uuid())
+  name             String   @default("unknown")
+  email            String   @unique
+  contactNo        String
+  profilePhoto     String?
+  presentAddress   String
+  permanentAddress String
+  nid              String   @unique
+  guardian         String
+  guardianAddress  String
+  isDeleted        Boolean  @default(false)
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+
+  user User @relation(fields: [email], references: [email])
+
+  @@map("applicants")
 }
 
 //enums......................

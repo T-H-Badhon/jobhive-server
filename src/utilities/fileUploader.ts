@@ -23,6 +23,10 @@ const storage = multer.diskStorage({
 const upload = multer({ storage: storage });
 
 const upload_to_cloudinary = async (path: string, name: string) => {
+  if (!path) {
+    return;
+  }
+
   return new Promise((resolve, reject) => {
     cloudinary.uploader.upload(path, { public_id: name }, (error, result) => {
       fs.unlinkSync(path);
