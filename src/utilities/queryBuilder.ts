@@ -1,9 +1,10 @@
 const querybuilder = (
   query: Record<string, unknown>,
-  filterFields: string[]
+  filterFields: string[],
+  searchFields: string[]
 ) => {
   const { searchTerm, ...filter } = query;
-  const searchFields = ["name", "email"];
+
   const andWhere = [];
   if (searchTerm) {
     andWhere.push({

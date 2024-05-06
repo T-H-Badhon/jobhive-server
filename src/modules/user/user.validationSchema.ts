@@ -1,4 +1,4 @@
-import { EmploymentStatus } from "@prisma/client";
+import { EmploymentStatus, UserStatus } from "@prisma/client";
 import { z } from "zod";
 
 export const zodAdminCreateSchema = z.object({
@@ -82,5 +82,11 @@ export const zodApplicantCreateSchema = z.object({
       EmploymentStatus.UNEMPLOYED,
     ]),
     graduated: z.boolean(),
+  }),
+});
+
+export const zodChangeStatusSchema = z.object({
+  body: z.object({
+    status: z.enum([UserStatus.ACTIVE, UserStatus.BLOCKED, UserStatus.DELETED]),
   }),
 });

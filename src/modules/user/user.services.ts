@@ -1,6 +1,16 @@
-import { Admin, PrismaClient, UserRoles } from "@prisma/client";
+import {
+  Admin,
+  Prisma,
+  PrismaClient,
+  UserRoles,
+  UserStatus,
+} from "@prisma/client";
 import bcrypt from "bcrypt";
 import { fileUpload } from "../../utilities/fileUploader";
+import querybuilder from "../../utilities/queryBuilder";
+import paginationandSorting from "../../utilities/pagination&sorting";
+import AppError from "../../errors/AppError";
+import httpStatus from "http-status";
 
 const prisma = new PrismaClient();
 
@@ -251,6 +261,75 @@ const createCompany = async (payload: any, photoDirectory: string) => {
   return { company: result };
 };
 
+const allUsers = async (query: any) => {
+  const filterFields = ["email", "role", "status"];
+  const searchFields = ["email"];
+  const andWhere: Prisma.UserWhereInput[] = querybuilder(
+    query,
+    filterFields,
+    searchFields
+  );
+
+  const { page, limit, sortBy, sortOrder } = paginationandSorting(query);
+
+  const result = await prisma.user.findMany({
+    where: { AND: andWhere },
+    skip: (page - 1) * limit,
+    take: limit,
+    orderBy: {
+      [sortBy as string]: sortOrder,
+    },
+    select: {
+      id: true,
+      email: true,
+      role: true,
+      status: true,
+      needPasswordChange: true,
+      createdAt: true,
+      updatedAt: true,
+      admin: true,
+      modaretor: true,
+    },
+    // include: {
+    //   admin: true, //include and select are not work togather
+    // }, //include er kaj select er vetorew kora jai
+  });
+
+  const total = await prisma.user.count({
+    where: { AND: andWhere },
+  });
+
+  return {
+    meta: {
+      total,
+      page,
+      limit,
+    },
+    data: result,
+  };
+};
+
+const changeStatus = async (id: string, newStatus: { status: UserStatus }) => {
+  const userData = await prisma.user.findUnique({
+    where: {
+      id: id,
+    },
+  });
+
+  if (!userData) {
+    throw new AppError(httpStatus.NOT_FOUND, "user not found");
+  }
+
+  const updateData = await prisma.user.update({
+    where: {
+      id: id,
+    },
+    data: newStatus,
+  });
+
+  return updateData;
+};
+
 export const userServices = {
   createAdmin,
   createModaretor,
@@ -258,4 +337,6 @@ export const userServices = {
   createSelector,
   createApplicant,
   createCompany,
+  allUsers,
+  changeStatus,
 };

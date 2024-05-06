@@ -6,7 +6,12 @@ const prisma = new PrismaClient();
 
 const allAdmins = async (query: any) => {
   const filterFields = ["name", "contactNo", "email", "nid"];
-  const andWhere: Prisma.AdminWhereInput[] = querybuilder(query, filterFields);
+  const searchFields = ["name", "email"];
+  const andWhere: Prisma.AdminWhereInput[] = querybuilder(
+    query,
+    filterFields,
+    searchFields
+  );
 
   const { page, limit, sortBy, sortOrder } = paginationandSorting(query);
 

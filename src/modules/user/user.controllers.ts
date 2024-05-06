@@ -1,7 +1,8 @@
-import { Request, Response } from "express";
+import { NextFunction, Request, Response } from "express";
 import { userServices } from "./user.services";
 import response from "../../utilities/response";
 import httpStatus from "http-status";
+import catchAsync from "../../utilities/catchAsync";
 
 const createAdmin = async (req: Request, res: Response) => {
   try {
@@ -114,6 +115,39 @@ const createCompany = async (req: Request, res: Response) => {
   }
 };
 
+const allUser = catchAsync(
+  async (req: Request, res: Response, next: NextFunction) => {
+    const query = req.query;
+
+    const result = await userServices.allUsers(query);
+
+    response(res, {
+      statusCode: httpStatus.OK,
+      success: true,
+      message: " All users fetch successfully!",
+      meta: result.meta,
+      data: result.data,
+    });
+  }
+);
+
+const changeStatus = catchAsync(
+  async (req: Request, res: Response, next: NextFunction) => {
+    const newStatus = req.body;
+
+    const id = req.params.id;
+
+    const result = await userServices.changeStatus(id, newStatus);
+
+    response(res, {
+      statusCode: httpStatus.OK,
+      success: true,
+      message: "user status changed",
+      data: result,
+    });
+  }
+);
+
 export const userControllers = {
   createAdmin,
   createModaretor,
@@ -121,4 +155,6 @@ export const userControllers = {
   createSelector,
   createApplicant,
   createCompany,
+  allUser,
+  changeStatus,
 };

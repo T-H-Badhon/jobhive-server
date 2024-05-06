@@ -2,14 +2,13 @@ import { Router } from "express";
 import { userControllers } from "./user.controllers";
 import auth from "../../middlewares/auth";
 import { UserRoles } from "@prisma/client";
-import multer from "multer";
-import path from "path";
 import { fileUpload } from "../../utilities/fileUploader";
 import { formdataModifier } from "../../middlewares/formDataModifier";
 import zodValidation from "../../middlewares/zodValidation";
 import {
   zodAdminCreateSchema,
   zodApplicantCreateSchema,
+  zodChangeStatusSchema,
   zodCompanyCreateSchema,
   zodInterviewerCreateSchema,
   zodModaretorCreateSchema,
@@ -62,6 +61,16 @@ router.post(
   formdataModifier(),
   zodValidation(zodCompanyCreateSchema),
   userControllers.createCompany
+);
+
+//---------------------------------------------------
+
+router.get("/", userControllers.allUser);
+
+router.patch(
+  "/change-status/:id",
+  zodValidation(zodChangeStatusSchema),
+  userControllers.changeStatus
 );
 
 export const userRoutes = router;
