@@ -330,6 +330,28 @@ const changeStatus = async (id: string, newStatus: { status: UserStatus }) => {
   return updateData;
 };
 
+const getMe = async (id: string, role: UserRoles) => {
+  const relationTable = role.toLocaleLowerCase();
+
+  console.log(relationTable);
+
+  const userData = await prisma.user.findUniqueOrThrow({
+    where: {
+      id: id,
+    },
+    select: {
+      id: true,
+      role: true,
+      status: true,
+      [relationTable]: true,
+      createdAt: true,
+      updatedAt: true,
+    },
+  });
+
+  return userData;
+};
+
 export const userServices = {
   createAdmin,
   createModaretor,
@@ -339,4 +361,5 @@ export const userServices = {
   createCompany,
   allUsers,
   changeStatus,
+  getMe,
 };

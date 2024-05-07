@@ -67,6 +67,19 @@ router.post(
 
 router.get("/", userControllers.allUser);
 
+router.get(
+  "/me",
+  auth(
+    UserRoles.ADMIN,
+    UserRoles.APPLICANT,
+    UserRoles.COMPANY,
+    UserRoles.INTERVIEWER,
+    UserRoles.MODARETOR,
+    UserRoles.SELECTOR
+  ),
+  userControllers.getMe
+);
+
 router.patch(
   "/change-status/:id",
   zodValidation(zodChangeStatusSchema),

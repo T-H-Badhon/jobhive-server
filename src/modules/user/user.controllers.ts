@@ -148,6 +148,22 @@ const changeStatus = catchAsync(
   }
 );
 
+const getMe = catchAsync(
+  async (req: Request, res: Response, next: NextFunction) => {
+    const id = req.user.id;
+    const role = req.user.role;
+
+    const result = await userServices.getMe(id, role);
+
+    response(res, {
+      statusCode: httpStatus.OK,
+      success: true,
+      message: "Your data fetch successfully",
+      data: result,
+    });
+  }
+);
+
 export const userControllers = {
   createAdmin,
   createModaretor,
@@ -157,4 +173,5 @@ export const userControllers = {
   createCompany,
   allUser,
   changeStatus,
+  getMe,
 };
