@@ -22,20 +22,24 @@ const storage = multer.diskStorage({
 
 const upload = multer({ storage: storage });
 
-const upload_to_cloudinary = async (path: string, name: string) => {
+const upload_to_cloudinary = async (path: string) => {
   if (!path) {
     return;
   }
-
+  const uniqueSuffix = Date.now() + "-" + Math.round(Math.random() * 1e9);
   return new Promise((resolve, reject) => {
-    cloudinary.uploader.upload(path, { public_id: name }, (error, result) => {
-      fs.unlinkSync(path);
-      if (error) {
-        reject(error);
-      } else {
-        resolve(result?.secure_url);
+    cloudinary.uploader.upload(
+      path,
+      { public_id: uniqueSuffix },
+      (error, result) => {
+        fs.unlinkSync(path);
+        if (error) {
+          reject(error);
+        } else {
+          resolve(result?.secure_url);
+        }
       }
-    });
+    );
   });
 };
 

@@ -12,6 +12,7 @@ import {
   zodCompanyCreateSchema,
   zodInterviewerCreateSchema,
   zodModaretorCreateSchema,
+  zodProfieUpdateSchema,
   zodSelectorCreateSchema,
 } from "./user.validationSchema";
 
@@ -68,7 +69,7 @@ router.post(
 router.get("/", userControllers.allUser);
 
 router.get(
-  "/me",
+  "/my-profile",
   auth(
     UserRoles.ADMIN,
     UserRoles.APPLICANT,
@@ -78,6 +79,22 @@ router.get(
     UserRoles.SELECTOR
   ),
   userControllers.getMe
+);
+
+router.patch(
+  "/my-profile/update",
+  fileUpload.upload.single("file"),
+  formdataModifier(),
+  auth(
+    UserRoles.ADMIN,
+    UserRoles.APPLICANT,
+    UserRoles.COMPANY,
+    UserRoles.INTERVIEWER,
+    UserRoles.MODARETOR,
+    UserRoles.SELECTOR
+  ),
+  zodValidation(zodProfieUpdateSchema),
+  userControllers.updateMe
 );
 
 router.patch(

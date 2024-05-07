@@ -164,6 +164,31 @@ const getMe = catchAsync(
   }
 );
 
+const updateMe = catchAsync(
+  async (req: Request, res: Response, next: NextFunction) => {
+    const email = req.user.email;
+    const role = req.user.role;
+
+    const photoDirectory = req.file?.path as string;
+
+    const updateData = req.body;
+
+    const result = await userServices.updateMe(
+      email,
+      role,
+      updateData,
+      photoDirectory
+    );
+
+    response(res, {
+      statusCode: httpStatus.OK,
+      success: true,
+      message: "Your data updated successfully",
+      data: result,
+    });
+  }
+);
+
 export const userControllers = {
   createAdmin,
   createModaretor,
@@ -174,4 +199,5 @@ export const userControllers = {
   allUser,
   changeStatus,
   getMe,
+  updateMe,
 };
