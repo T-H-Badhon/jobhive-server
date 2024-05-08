@@ -8,10 +8,10 @@ import { applicantServices } from "./applicant.services";
 const addEducationalQualification = catchAsync(
   async (req: Request, res: Response, next: NextFunction) => {
     const qualificationData = req.body;
-    const email = req.user.email;
+    const id = req.user.id;
 
     const result = await applicantServices.addEducationalQualification(
-      email,
+      id,
       qualificationData
     );
 

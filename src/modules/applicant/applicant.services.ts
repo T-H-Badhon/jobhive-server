@@ -5,31 +5,27 @@ import httpStatus from "http-status";
 const prisma = new PrismaClient();
 
 const addEducationalQualification = async (
-  email: string,
+  id: string,
   qualificationData: any
 ) => {
-  const applicant = await prisma.applicant.findUniqueOrThrow({
+  const applicant = await prisma.user.findUniqueOrThrow({
     where: {
-      email: email,
+      id: id,
+    },
+    select: {
+      applicant: true,
     },
   });
 
-  const result = await prisma.$transaction(async (tx) => {
-    const qualification = await tx.educationalQualification.create({
-      data: qualificationData,
-    });
+  qualificationData.applicantId = applicant.applicant?.id;
 
-    await tx.applicantEducation.create({
-      data: {
-        applicantId: applicant?.id as string,
-        qualificationId: qualification.id,
-      },
-    });
+  console.log(qualificationData);
 
-    return qualification;
+  const qualification = await prisma.educationalQualification.create({
+    data: qualificationData,
   });
 
-  return { qualificationData: result };
+  return qualification;
 };
 
 export const applicantServices = {
