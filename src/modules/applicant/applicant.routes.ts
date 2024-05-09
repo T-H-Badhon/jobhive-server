@@ -2,12 +2,13 @@ import { Router } from "express";
 
 import { UserRoles } from "@prisma/client";
 import auth from "../../middlewares/auth";
-import { applicantControllers } from "./applicant.controllers";
 import zodValidation from "../../middlewares/zodValidation";
+
+import { eQualificationControllers } from "../EducationalQualification/qualification.controllers";
 import {
   zodEducationalQualificationSchema,
   zodUpdateEQualificationSchema,
-} from "./applicant.validationSchema";
+} from "../EducationalQualification/qualification.validationSchema";
 
 const router = Router();
 
@@ -15,26 +16,26 @@ router.post(
   "/add-e-qualification",
   auth(UserRoles.APPLICANT),
   zodValidation(zodEducationalQualificationSchema),
-  applicantControllers.addEducationalQualification
+  eQualificationControllers.addEducationalQualification
 );
 
 router.get(
   "/my-e-qualifications",
   auth(UserRoles.APPLICANT),
-  applicantControllers.getAllQualification
+  eQualificationControllers.getAllQualification
 );
 
 router.patch(
   "/update-e-qualification/:e_id",
   auth(UserRoles.APPLICANT),
   zodValidation(zodUpdateEQualificationSchema),
-  applicantControllers.updateEducationalQualification
+  eQualificationControllers.updateEducationalQualification
 );
 
 router.delete(
   "/delete-e-qualification/:e_id",
   auth(UserRoles.APPLICANT),
-  applicantControllers.deleteEducationalQualification
+  eQualificationControllers.deleteEducationalQualification
 );
 
 export const applicantRoutes = router;
