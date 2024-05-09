@@ -9,9 +9,24 @@ import {
   zodEducationalQualificationSchema,
   zodUpdateEQualificationSchema,
 } from "../EducationalQualification/qualification.validationSchema";
+import { applicantControllers } from "./applicant.controllers";
 
 const router = Router();
 
+router.get("/", applicantControllers.allApplicants);
+router.get("/:id", applicantControllers.oneApplicant);
+router.patch(
+  "/me",
+  auth(UserRoles.APPLICANT),
+  applicantControllers.updateApplicant
+);
+router.delete(
+  "/me",
+  auth(UserRoles.APPLICANT),
+  applicantControllers.deleteApplicant
+);
+
+//educational qualifications-----------------
 router.post(
   "/add-e-qualification",
   auth(UserRoles.APPLICANT),

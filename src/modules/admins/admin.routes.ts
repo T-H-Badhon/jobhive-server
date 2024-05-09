@@ -27,7 +27,6 @@ router.patch(
   adminControllers.updateAdmin
 );
 
-router.delete("/me", auth(UserRoles.ADMIN), adminControllers.deleteMe); // self delete routes only for user own use
-router.delete("/:id", auth(UserRoles.SUPERADMIN), adminControllers.deleteAdmin);
+router.delete("/me", auth(UserRoles.ADMIN), adminControllers.deleteAdmin);
 
 export const adminRoutes = router;

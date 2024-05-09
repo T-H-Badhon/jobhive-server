@@ -1,79 +1,107 @@
-import { Prisma, PrismaClient } from "@prisma/client";
+import { Applicant, Prisma, PrismaClient } from "@prisma/client";
+import querybuilder from "../../utilities/queryBuilder";
+import paginationandSorting from "../../utilities/pagination&sorting";
 import AppError from "../../errors/AppError";
 import httpStatus from "http-status";
 
 const prisma = new PrismaClient();
 
-const addEducationalQualification = async (
-  id: string,
-  qualificationData: any
-) => {
-  const applicant = await prisma.user.findUniqueOrThrow({
-    where: {
-      id: id,
-    },
-    select: {
-      applicant: true,
-    },
-  });
+const allApplicants = async (query: any) => {
+  const filterFields = [
+    "name",
+    "contactNo",
+    "email",
+    "nid",
+    "married",
+    "employmentStatus",
+  ];
+  const searchFields = ["name", "email", "contactNo", "address"];
+  const andWhere: Prisma.ApplicantWhereInput[] = querybuilder(
+    query,
+    filterFields,
+    searchFields
+  );
 
-  qualificationData.applicantId = applicant.applicant?.id;
+  const { page, limit, sortBy, sortOrder } = paginationandSorting(query);
 
-  console.log(qualificationData);
-
-  const qualification = await prisma.educationalQualification.create({
-    data: qualificationData,
-  });
-
-  return qualification;
-};
-
-const getAllQualifications = async (id: string) => {
-  const applicant = await prisma.user.findUniqueOrThrow({
-    where: {
-      id: id,
-    },
-    select: {
-      applicant: true,
-    },
-  });
-
-  const qualifications = await prisma.educationalQualification.findMany({
-    where: {
-      applicantId: applicant.applicant?.id,
-    },
+  const result = await prisma.applicant.findMany({
+    where: { AND: andWhere },
+    skip: (page - 1) * limit,
+    take: limit,
     orderBy: {
-      passingYear: "desc",
+      [sortBy as string]: sortOrder,
+    },
+    include: {
+      educationalQualification: {
+        orderBy: {
+          passingYear: "desc",
+        },
+      },
     },
   });
 
-  return qualifications;
+  const total = await prisma.applicant.count({
+    where: { AND: andWhere },
+  });
+
+  return {
+    meta: {
+      total,
+      page,
+      limit,
+    },
+    data: result,
+  };
 };
 
-const updateEducationalQualification = async (id: string, updateData: any) => {
-  const updatedData = await prisma.educationalQualification.update({
+const oneApplicant = async (id: string) => {
+  const result = await prisma.applicant.findUnique({
     where: {
       id: id,
+    },
+    include: {
+      educationalQualification: {
+        orderBy: {
+          passingYear: "desc",
+        },
+      },
+    },
+  });
+  return result;
+};
+
+const updateApplicant = async (
+  email: string,
+  updateData: Partial<Applicant>
+) => {
+  const result = await prisma.applicant.update({
+    where: {
+      email: email,
     },
     data: updateData,
   });
-
-  return updatedData;
+  return result;
 };
 
-const deleteEducationalQualification = async (id: string) => {
-  const deletedData = await prisma.educationalQualification.delete({
+const deleteApplicant = async (email: string) => {
+  console.log(email);
+  const deletedData = await prisma.applicant.update({
     where: {
-      id: id,
+      email: email,
+    },
+    data: {
+      isDeleted: true,
     },
   });
 
-  return deletedData;
+  if (deletedData.isDeleted != true) {
+    throw new AppError(httpStatus.FAILED_DEPENDENCY, "account deletion failed");
+  }
 };
 
 export const applicantServices = {
-  addEducationalQualification,
-  getAllQualifications,
-  updateEducationalQualification,
-  deleteEducationalQualification,
+  allApplicants,
+  oneApplicant,
+  updateApplicant,
+  deleteApplicant,
 };

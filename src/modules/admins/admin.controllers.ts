@@ -53,35 +53,20 @@ const updateAdmin = catchAsync(
 
 const deleteAdmin = catchAsync(
   async (req: Request, res: Response, next: NextFunction) => {
-    const id = req.params.id;
+    const id = req.user.id;
     const result = await adminServices.deleteAdmin(id);
 
     response(res, {
       statusCode: httpStatus.OK,
       success: true,
-      message: "Admin deleted successfully!",
-      data: result,
+      message: "account deleted successfully!",
     });
   }
 );
-
-const deleteMe = catchAsync(async (req: Request, res: Response) => {
-  const email = req.body; // here we have to change to req.user custom req property..
-
-  const result = await adminServices.deleteMe(email);
-
-  response(res, {
-    statusCode: httpStatus.OK,
-    success: true,
-    message: "Your account deleted successfully!",
-    data: result,
-  });
-});
 
 export const adminControllers = {
   allAdmins,
   oneAdmin,
   updateAdmin,
   deleteAdmin,
-  deleteMe,
 };

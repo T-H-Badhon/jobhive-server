@@ -5,77 +5,69 @@ import response from "../../utilities/response";
 import { NextFunction, Request, Response } from "express";
 import { applicantServices } from "./applicant.services";
 
-const addEducationalQualification = catchAsync(
+const allApplicants = catchAsync(
   async (req: Request, res: Response, next: NextFunction) => {
-    const qualificationData = req.body;
-    const id = req.user.id;
+    const query = req.query;
 
-    const result = await applicantServices.addEducationalQualification(
-      id,
-      qualificationData
-    );
+    const result = await applicantServices.allApplicants(query);
 
     response(res, {
       statusCode: httpStatus.OK,
       success: true,
-      message: "Educational qualification added!",
+      message: " All applicants fetch successfully!",
+      meta: result.meta,
+      data: result.data,
+    });
+  }
+);
+
+const oneApplicant = catchAsync(
+  async (req: Request, res: Response, next: NextFunction) => {
+    const id = req.params.id;
+
+    const result = await applicantServices.oneApplicant(id);
+
+    response(res, {
+      statusCode: httpStatus.OK,
+      success: true,
+      message: "Applicant data fetched successfully!",
       data: result,
     });
   }
 );
 
-const getAllQualification = catchAsync(
+const updateApplicant = catchAsync(
   async (req: Request, res: Response, next: NextFunction) => {
-    const id = req.user.id;
-
-    const result = await applicantServices.getAllQualifications(id);
-
-    response(res, {
-      statusCode: httpStatus.OK,
-      success: true,
-      message: "Educational qualifications fetch!",
-      data: result,
-    });
-  }
-);
-
-const updateEducationalQualification = catchAsync(
-  async (req: Request, res: Response, next: NextFunction) => {
+    const email = req.user.email;
     const updateData = req.body;
-    const id = req.params.e_id;
 
-    const result = await applicantServices.updateEducationalQualification(
-      id,
-      updateData
-    );
+    const result = await applicantServices.updateApplicant(email, updateData);
 
     response(res, {
       statusCode: httpStatus.OK,
       success: true,
-      message: "Educational qualification updated!",
+      message: "Applicant updated successfully!",
       data: result,
     });
   }
 );
 
-const deleteEducationalQualification = catchAsync(
+const deleteApplicant = catchAsync(
   async (req: Request, res: Response, next: NextFunction) => {
-    const id = req.params.e_id;
-
-    const result = await applicantServices.deleteEducationalQualification(id);
+    const email = req.user.email;
+    const result = await applicantServices.deleteApplicant(email);
 
     response(res, {
       statusCode: httpStatus.OK,
       success: true,
-      message: "Educational qualification deleted!",
-      data: result,
+      message: "account deleted successfully!",
     });
   }
 );
 
 export const applicantControllers = {
-  addEducationalQualification,
-  getAllQualification,
-  updateEducationalQualification,
-  deleteEducationalQualification,
+  allApplicants,
+  oneApplicant,
+  updateApplicant,
+  deleteApplicant,
 };

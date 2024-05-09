@@ -1,6 +1,8 @@
 import { Admin, Prisma, PrismaClient, UserStatus } from "@prisma/client";
 import querybuilder from "../../utilities/queryBuilder";
 import paginationandSorting from "../../utilities/pagination&sorting";
+import AppError from "../../errors/AppError";
+import httpStatus from "http-status";
 
 const prisma = new PrismaClient();
 
@@ -58,53 +60,18 @@ const updateAdmin = async (id: string, updateData: Partial<Admin>) => {
 };
 
 const deleteAdmin = async (id: string) => {
-  const result = await prisma.$transaction(async (tx) => {
-    const deletedData = await tx.admin.delete({
-      where: {
-        id: id,
-      },
-    });
-
-    const userDelete = tx.user.delete({
-      where: {
-        email: deletedData.email,
-      },
-    });
-
-    return {
-      deletedData,
-    };
+  const deletedData = await prisma.admin.update({
+    where: {
+      id: id,
+    },
+    data: {
+      isDeleted: true,
+    },
   });
 
-  return result;
-};
-
-const deleteMe = async (email: string) => {
-  const result = await prisma.$transaction(async (tx) => {
-    const deleteAdmin = await tx.admin.update({
-      where: {
-        email: email,
-      },
-      data: {
-        isDeleted: true,
-      },
-    });
-
-    const deleteUser = await tx.user.update({
-      where: {
-        email: email,
-      },
-      data: {
-        status: UserStatus.DELETED,
-      },
-    });
-
-    return {
-      message: "softly deleted",
-    };
-  });
-
-  return result;
+  if (deletedData.isDeleted != true) {
+    throw new AppError(httpStatus.FAILED_DEPENDENCY, "account deletion failed");
+  }
 };
 
 export const adminServices = {
@@ -112,5 +79,4 @@ export const adminServices = {
   oneAdmin,
   updateAdmin,
   deleteAdmin,
-  deleteMe,
 };
