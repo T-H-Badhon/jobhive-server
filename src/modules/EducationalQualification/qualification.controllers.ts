@@ -43,7 +43,7 @@ const getAllQualification = catchAsync(
 const updateEducationalQualification = catchAsync(
   async (req: Request, res: Response, next: NextFunction) => {
     const updateData = req.body;
-    const id = req.params.e_id;
+    const id = req.params.qualificationId;
 
     const result = await eQualificationServices.updateEducationalQualification(
       id,
@@ -61,7 +61,7 @@ const updateEducationalQualification = catchAsync(
 
 const deleteEducationalQualification = catchAsync(
   async (req: Request, res: Response, next: NextFunction) => {
-    const id = req.params.e_id;
+    const id = req.params.qualificationId;
 
     const result = await eQualificationServices.deleteEducationalQualification(
       id

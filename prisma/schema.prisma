@@ -144,6 +144,7 @@ model Applicant {
 
   user                     User                       @relation(fields: [email], references: [email])
   educationalQualification EducationalQualification[]
+  WorkExperience           WorkExperience[]
 
   @@map("applicants")
 }
@@ -159,6 +160,20 @@ model EducationalQualification {
   applicant   Applicant @relation(fields: [applicantId], references: [id])
 
   @@map("educationalQualifications")
+}
+
+model WorkExperience {
+  id               String   @id @default(uuid())
+  applicantId      String
+  position         String
+  company          String
+  startDate        DateTime
+  endDate          DateTime
+  responsibilities String
+
+  applicant Applicant @relation(fields: [applicantId], references: [id])
+
+  @@map("workExperience")
 }
 
 //enums......................

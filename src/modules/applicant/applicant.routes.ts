@@ -10,8 +10,15 @@ import {
   zodUpdateEQualificationSchema,
 } from "../EducationalQualification/qualification.validationSchema";
 import { applicantControllers } from "./applicant.controllers";
+import { zodWorkExperienceSchema } from "../workExperience/experience.validationSchema";
+import { wExperienceControllers } from "../workExperience/experience.controllers";
+import { qualificationRoutes } from "../EducationalQualification/qualification.router";
+import { experienceRoutes } from "../workExperience/experience.routes";
 
 const router = Router();
+
+router.use("/qualifications", qualificationRoutes);
+router.use("/experiences", experienceRoutes);
 
 router.get("/", applicantControllers.allApplicants);
 router.get("/:id", applicantControllers.oneApplicant);
@@ -24,33 +31,6 @@ router.delete(
   "/me",
   auth(UserRoles.APPLICANT),
   applicantControllers.deleteApplicant
-);
-
-//educational qualifications-----------------
-router.post(
-  "/add-e-qualification",
-  auth(UserRoles.APPLICANT),
-  zodValidation(zodEducationalQualificationSchema),
-  eQualificationControllers.addEducationalQualification
-);
-
-router.get(
-  "/my-e-qualifications",
-  auth(UserRoles.APPLICANT),
-  eQualificationControllers.getAllQualification
-);
-
-router.patch(
-  "/update-e-qualification/:e_id",
-  auth(UserRoles.APPLICANT),
-  zodValidation(zodUpdateEQualificationSchema),
-  eQualificationControllers.updateEducationalQualification
-);
-
-router.delete(
-  "/delete-e-qualification/:e_id",
-  auth(UserRoles.APPLICANT),
-  eQualificationControllers.deleteEducationalQualification
 );
 
 export const applicantRoutes = router;
