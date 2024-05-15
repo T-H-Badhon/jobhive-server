@@ -19,6 +19,20 @@ const allAdmins = catchAsync(
     });
   }
 );
+const myProfile = catchAsync(
+  async (req: Request, res: Response, next: NextFunction) => {
+    const email = req.user.email;
+
+    const result = await adminServices.myProfile(email);
+
+    response(res, {
+      statusCode: httpStatus.OK,
+      success: true,
+      message: "Profile data fetched successfully!",
+      data: result,
+    });
+  }
+);
 
 const oneAdmin = catchAsync(
   async (req: Request, res: Response, next: NextFunction) => {
@@ -37,15 +51,15 @@ const oneAdmin = catchAsync(
 
 const updateAdmin = catchAsync(
   async (req: Request, res: Response, next: NextFunction) => {
-    const id = req.params.id;
+    const email = req.user.email;
     const updateData = req.body;
 
-    const result = await adminServices.updateAdmin(id, updateData);
+    const result = await adminServices.updateAdmin(email, updateData);
 
     response(res, {
       statusCode: httpStatus.OK,
       success: true,
-      message: "Admin updated successfully!",
+      message: "Profile updated successfully!",
       data: result,
     });
   }
@@ -53,13 +67,13 @@ const updateAdmin = catchAsync(
 
 const deleteAdmin = catchAsync(
   async (req: Request, res: Response, next: NextFunction) => {
-    const id = req.user.id;
-    const result = await adminServices.deleteAdmin(id);
+    const email = req.user.email;
+    const result = await adminServices.deleteAdmin(email);
 
     response(res, {
       statusCode: httpStatus.OK,
       success: true,
-      message: "account deleted successfully!",
+      message: "Account deleted successfully!",
     });
   }
 );
@@ -67,6 +81,7 @@ const deleteAdmin = catchAsync(
 export const adminControllers = {
   allAdmins,
   oneAdmin,
+  myProfile,
   updateAdmin,
   deleteAdmin,
 };

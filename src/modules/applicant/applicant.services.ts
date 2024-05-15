@@ -60,6 +60,11 @@ const oneApplicant = async (id: string) => {
       id: id,
     },
     include: {
+      WorkExperience: {
+        orderBy: {
+          startDate: "desc",
+        },
+      },
       educationalQualification: {
         orderBy: {
           passingYear: "desc",
@@ -67,6 +72,36 @@ const oneApplicant = async (id: string) => {
       },
     },
   });
+
+  if (!result) {
+    throw new AppError(httpStatus.NOT_FOUND, "Applicant not found!");
+  }
+
+  return result;
+};
+const myProfile = async (email: string) => {
+  const result = await prisma.applicant.findUnique({
+    where: {
+      email: email,
+    },
+    include: {
+      WorkExperience: {
+        orderBy: {
+          startDate: "desc",
+        },
+      },
+      educationalQualification: {
+        orderBy: {
+          passingYear: "desc",
+        },
+      },
+    },
+  });
+
+  if (!result) {
+    throw new AppError(httpStatus.NOT_FOUND, "Profile data not found");
+  }
+
   return result;
 };
 
@@ -80,6 +115,10 @@ const updateApplicant = async (
     },
     data: updateData,
   });
+
+  if (!result) {
+    throw new AppError(httpStatus.NOT_IMPLEMENTED, "Profile update failed");
+  }
   return result;
 };
 
@@ -95,13 +134,14 @@ const deleteApplicant = async (email: string) => {
   });
 
   if (deletedData.isDeleted != true) {
-    throw new AppError(httpStatus.FAILED_DEPENDENCY, "account deletion failed");
+    throw new AppError(httpStatus.FAILED_DEPENDENCY, "Account deletion failed");
   }
 };
 
 export const applicantServices = {
   allApplicants,
   oneApplicant,
+  myProfile,
   updateApplicant,
   deleteApplicant,
 };

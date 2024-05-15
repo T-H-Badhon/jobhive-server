@@ -12,7 +12,7 @@ router.get(
   auth(UserRoles.ADMIN, UserRoles.SUPERADMIN),
   adminControllers.allAdmins
 );
-router.get("/me", auth(UserRoles.ADMIN)); // self profile
+router.get("/me", auth(UserRoles.ADMIN), adminControllers.myProfile); // self profile
 router.get(
   "/:id",
   auth(UserRoles.ADMIN, UserRoles.SUPERADMIN),
@@ -20,12 +20,6 @@ router.get(
 );
 
 router.patch("/me", auth(UserRoles.ADMIN)); //self update
-router.patch(
-  "/:id",
-  auth(UserRoles.SUPERADMIN),
-  zodValidation(zodAdminUpdateSchema),
-  adminControllers.updateAdmin
-);
 
 router.delete("/me", auth(UserRoles.ADMIN), adminControllers.deleteAdmin);
 

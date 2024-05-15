@@ -46,23 +46,46 @@ const oneAdmin = async (id: string) => {
       id: id,
     },
   });
+
+  if (!result) {
+    throw new AppError(httpStatus.NOT_FOUND, "Admin not found");
+  }
+
   return result;
 };
 
-const updateAdmin = async (id: string, updateData: Partial<Admin>) => {
+const myProfile = async (email: string) => {
+  const result = await prisma.admin.findUnique({
+    where: {
+      email: email,
+    },
+  });
+
+  if (!result) {
+    throw new AppError(httpStatus.NOT_FOUND, "Admin not found");
+  }
+
+  return result;
+};
+
+const updateAdmin = async (email: string, updateData: Partial<Admin>) => {
   const result = await prisma.admin.update({
     where: {
-      id: id,
+      email: email,
     },
     data: updateData,
   });
+
+  if (!result) {
+    throw new AppError(httpStatus.NOT_FOUND, "Profile update found");
+  }
   return result;
 };
 
-const deleteAdmin = async (id: string) => {
+const deleteAdmin = async (email: string) => {
   const deletedData = await prisma.admin.update({
     where: {
-      id: id,
+      email: email,
     },
     data: {
       isDeleted: true,
@@ -70,13 +93,14 @@ const deleteAdmin = async (id: string) => {
   });
 
   if (deletedData.isDeleted != true) {
-    throw new AppError(httpStatus.FAILED_DEPENDENCY, "account deletion failed");
+    throw new AppError(httpStatus.FAILED_DEPENDENCY, "Account deletion failed");
   }
 };
 
 export const adminServices = {
   allAdmins,
   oneAdmin,
+  myProfile,
   updateAdmin,
   deleteAdmin,
 };

@@ -35,6 +35,20 @@ const oneApplicant = catchAsync(
     });
   }
 );
+const myProfile = catchAsync(
+  async (req: Request, res: Response, next: NextFunction) => {
+    const email = req.user.email;
+
+    const result = await applicantServices.myProfile(email);
+
+    response(res, {
+      statusCode: httpStatus.OK,
+      success: true,
+      message: "Profile data fetched successfully!",
+      data: result,
+    });
+  }
+);
 
 const updateApplicant = catchAsync(
   async (req: Request, res: Response, next: NextFunction) => {
@@ -46,7 +60,7 @@ const updateApplicant = catchAsync(
     response(res, {
       statusCode: httpStatus.OK,
       success: true,
-      message: "Applicant updated successfully!",
+      message: "Profile updated successfully!",
       data: result,
     });
   }
@@ -68,6 +82,7 @@ const deleteApplicant = catchAsync(
 export const applicantControllers = {
   allApplicants,
   oneApplicant,
+  myProfile,
   updateApplicant,
   deleteApplicant,
 };

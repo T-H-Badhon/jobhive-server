@@ -17,6 +17,7 @@ import paginationandSorting from "../../utilities/pagination&sorting";
 import AppError from "../../errors/AppError";
 import httpStatus from "http-status";
 import { PrismaClientOptions } from "@prisma/client/runtime/library";
+import { userRoutes } from "./user.routes";
 
 const prisma = new PrismaClient();
 
@@ -309,7 +310,11 @@ const allUsers = async (query: any) => {
   };
 };
 
-const changeStatus = async (id: string, newStatus: { status: UserStatus }) => {
+const changeStatus = async (
+  role: string,
+  id: string,
+  newStatus: { status: UserStatus }
+) => {
   const userData = await prisma.user.findUnique({
     where: {
       id: id,
@@ -318,6 +323,19 @@ const changeStatus = async (id: string, newStatus: { status: UserStatus }) => {
 
   if (!userData) {
     throw new AppError(httpStatus.NOT_FOUND, "user not found");
+  }
+
+  if (userData.role == UserRoles.SUPERADMIN) {
+    throw new AppError(
+      httpStatus.FORBIDDEN,
+      "You are not authorized to change status of this user"
+    );
+  }
+  if (userData.role == UserRoles.ADMIN && role == UserRoles.MODARETOR) {
+    throw new AppError(
+      httpStatus.FORBIDDEN,
+      "You are not authorized to change status of this user"
+    );
   }
 
   const updateData = await prisma.user.update({
@@ -330,99 +348,6 @@ const changeStatus = async (id: string, newStatus: { status: UserStatus }) => {
   return updateData;
 };
 
-const getMe = async (id: string, role: UserRoles) => {
-  const relationTable = role.toLocaleLowerCase();
-
-  console.log(relationTable);
-
-  const userData = await prisma.user.findUniqueOrThrow({
-    where: {
-      id: id,
-    },
-    select: {
-      id: true,
-      role: true,
-      status: true,
-      [relationTable]: true,
-      createdAt: true,
-      updatedAt: true,
-    },
-  });
-
-  return userData;
-};
-
-const updateMe = async (
-  email: string,
-  role: UserRoles,
-  updateData: any,
-  photoDirectory: string
-) => {
-  console.log(updateData);
-  if (photoDirectory) {
-    const photolink = (await fileUpload.upload_to_cloudinary(
-      photoDirectory
-    )) as string;
-
-    updateData.profilePhoto = photolink;
-  }
-  if (role == UserRoles.ADMIN) {
-    const updateUser = await prisma.admin.update({
-      where: {
-        email: email,
-      },
-      data: updateData,
-    });
-    return updateUser;
-  }
-  if (role == UserRoles.MODARETOR) {
-    const updateUser = await prisma.modaretor.update({
-      where: {
-        email: email,
-      },
-      data: updateData,
-    });
-    return updateUser;
-  }
-  if (role == UserRoles.INTERVIEWER) {
-    const updateUser = await prisma.interviewer.update({
-      where: {
-        email: email,
-      },
-      data: updateData,
-    });
-    return updateUser;
-  }
-  if (role == UserRoles.SELECTOR) {
-    const updateUser = await prisma.selector.update({
-      where: {
-        email: email,
-      },
-      data: updateData,
-    });
-
-    return updateUser;
-  }
-  if (role == UserRoles.COMPANY) {
-    const updateUser = await prisma.company.update({
-      where: {
-        email: email,
-      },
-      data: updateData,
-    });
-    return updateUser;
-  }
-  if (role == UserRoles.APPLICANT) {
-    const updateUser = await prisma.applicant.update({
-      where: {
-        email: email,
-      },
-      data: updateData,
-    });
-    return updateUser;
-  }
-};
-
 export const userServices = {
   createAdmin,
   createModaretor,
@@ -432,6 +357,4 @@ export const userServices = {
   createCompany,
   allUsers,
   changeStatus,
-  getMe,
-  updateMe,
 };

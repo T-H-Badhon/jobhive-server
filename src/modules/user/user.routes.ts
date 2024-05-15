@@ -12,13 +12,11 @@ import {
   zodCompanyCreateSchema,
   zodInterviewerCreateSchema,
   zodModaretorCreateSchema,
-  zodProfieUpdateSchema,
   zodSelectorCreateSchema,
 } from "./user.validationSchema";
 
 const router = Router();
 
-//employee creation routes.....
 router.post(
   "/create-admin",
   fileUpload.upload.single("file"),
@@ -30,6 +28,7 @@ router.post(
   "/create-modaretor",
   fileUpload.upload.single("file"),
   formdataModifier(),
+  auth(UserRoles.ADMIN),
   zodValidation(zodModaretorCreateSchema),
   userControllers.createModaretor
 );
@@ -37,6 +36,7 @@ router.post(
   "/create-interviewer",
   fileUpload.upload.single("file"),
   formdataModifier(),
+  auth(UserRoles.ADMIN, UserRoles.MODARETOR),
   zodValidation(zodInterviewerCreateSchema),
   userControllers.createInterviewer
 );
@@ -44,6 +44,7 @@ router.post(
   "/create-selector",
   fileUpload.upload.single("file"),
   formdataModifier(),
+  auth(UserRoles.ADMIN, UserRoles.MODARETOR),
   zodValidation(zodSelectorCreateSchema),
   userControllers.createSelector
 );
@@ -64,41 +65,15 @@ router.post(
   userControllers.createCompany
 );
 
-//---------------------------------------------------
-
-router.get("/", userControllers.allUser);
-
 router.get(
-  "/my-profile",
-  auth(
-    UserRoles.ADMIN,
-    UserRoles.APPLICANT,
-    UserRoles.COMPANY,
-    UserRoles.INTERVIEWER,
-    UserRoles.MODARETOR,
-    UserRoles.SELECTOR
-  ),
-  userControllers.getMe
-);
-
-router.patch(
-  "/my-profile/update",
-  fileUpload.upload.single("file"),
-  formdataModifier(),
-  auth(
-    UserRoles.ADMIN,
-    UserRoles.APPLICANT,
-    UserRoles.COMPANY,
-    UserRoles.INTERVIEWER,
-    UserRoles.MODARETOR,
-    UserRoles.SELECTOR
-  ),
-  zodValidation(zodProfieUpdateSchema),
-  userControllers.updateMe
+  "/",
+  auth(UserRoles.ADMIN, UserRoles.MODARETOR),
+  userControllers.allUser
 );
 
 router.patch(
   "/change-status/:id",
+  auth(UserRoles.ADMIN, UserRoles.MODARETOR),
   zodValidation(zodChangeStatusSchema),
   userControllers.changeStatus
 );

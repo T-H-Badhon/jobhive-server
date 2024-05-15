@@ -135,55 +135,16 @@ const changeStatus = catchAsync(
   async (req: Request, res: Response, next: NextFunction) => {
     const newStatus = req.body;
 
+    const role = req.user.role;
+
     const id = req.params.id;
 
-    const result = await userServices.changeStatus(id, newStatus);
+    const result = await userServices.changeStatus(role, id, newStatus);
 
     response(res, {
       statusCode: httpStatus.OK,
       success: true,
       message: "user status changed",
-      data: result,
-    });
-  }
-);
-
-const getMe = catchAsync(
-  async (req: Request, res: Response, next: NextFunction) => {
-    const id = req.user.id;
-    const role = req.user.role;
-
-    const result = await userServices.getMe(id, role);
-
-    response(res, {
-      statusCode: httpStatus.OK,
-      success: true,
-      message: "Your data fetch successfully",
-      data: result,
-    });
-  }
-);
-
-const updateMe = catchAsync(
-  async (req: Request, res: Response, next: NextFunction) => {
-    const email = req.user.email;
-    const role = req.user.role;
-
-    const photoDirectory = req.file?.path as string;
-
-    const updateData = req.body;
-
-    const result = await userServices.updateMe(
-      email,
-      role,
-      updateData,
-      photoDirectory
-    );
-
-    response(res, {
-      statusCode: httpStatus.OK,
-      success: true,
-      message: "Your data updated successfully",
       data: result,
     });
   }
@@ -198,6 +159,4 @@ export const userControllers = {
   createCompany,
   allUser,
   changeStatus,
-  getMe,
-  updateMe,
 };

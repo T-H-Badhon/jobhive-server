@@ -20,13 +20,36 @@ const router = Router();
 router.use("/qualifications", qualificationRoutes);
 router.use("/experiences", experienceRoutes);
 
-router.get("/", applicantControllers.allApplicants);
-router.get("/:id", applicantControllers.oneApplicant);
+router.get(
+  "/",
+  auth(
+    UserRoles.ADMIN,
+    UserRoles.INTERVIEWER,
+    UserRoles.MODARETOR,
+    UserRoles.SELECTOR
+  ),
+  applicantControllers.allApplicants
+);
+
+router.get("/me", auth(UserRoles.APPLICANT), applicantControllers.myProfile);
+
+router.get(
+  "/:id",
+  auth(
+    UserRoles.ADMIN,
+    UserRoles.INTERVIEWER,
+    UserRoles.MODARETOR,
+    UserRoles.SELECTOR
+  ),
+  applicantControllers.oneApplicant
+);
+
 router.patch(
   "/me",
   auth(UserRoles.APPLICANT),
   applicantControllers.updateApplicant
 );
+
 router.delete(
   "/me",
   auth(UserRoles.APPLICANT),

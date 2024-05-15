@@ -90,22 +90,3 @@ export const zodChangeStatusSchema = z.object({
     status: z.enum([UserStatus.ACTIVE, UserStatus.BLOCKED, UserStatus.DELETED]),
   }),
 });
-
-export const zodProfieUpdateSchema = z.object({
-  body: z.object({
-    nid: z.string().optional(),
-    name: z.string().optional(),
-    contactNo: z.string().optional(),
-    presentAddress: z.string().optional(),
-    permanentAddress: z.string().optional(),
-    guardian: z.string().optional(),
-    guardianAddress: z.string().optional(),
-    company: z.string().optional(),
-    married: z.boolean().optional(),
-    address: z.string().optional(),
-    employmentStatus: z
-      .enum([EmploymentStatus.WORKING, EmploymentStatus.UNEMPLOYED])
-      .optional(),
-    graduated: z.boolean().optional(),
-  }),
-});
