@@ -176,6 +176,45 @@ model WorkExperience {
   @@map("workExperience")
 }
 
+model Project {
+  id                  String                @id @default(uuid())
+  titlt               String
+  demoLink            String
+  sourceCode          String
+  description         String
+  projectTechnologies ProjectTechnologies[]
+  features            Features[]
+
+  @@map("project")
+}
+
+model Technology {
+  id                  String                @id @default(uuid())
+  name                String                @unique
+  projectTechnologies ProjectTechnologies[]
+
+  @@map("technology")
+}
+
+model Features {
+  id        String  @id @default(uuid())
+  feature   String
+  projectId String
+  project   Project @relation(fields: [projectId], references: [id])
+
+  @@map("feature")
+}
+
+model ProjectTechnologies {
+  projectId    String
+  project      Project    @relation(fields: [projectId], references: [id])
+  technologyId String
+  technology   Technology @relation(fields: [technologyId], references: [id])
+
+  @@id([projectId, technologyId])
+  @@map("projectTechnologies")
+}
+
 //enums......................
 enum UserRoles {
   SUPERADMIN
