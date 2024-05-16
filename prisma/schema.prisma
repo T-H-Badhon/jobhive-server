@@ -145,6 +145,7 @@ model Applicant {
   user                     User                       @relation(fields: [email], references: [email])
   educationalQualification EducationalQualification[]
   WorkExperience           WorkExperience[]
+  project                  Project[]
 
   @@map("applicants")
 }
@@ -178,6 +179,8 @@ model WorkExperience {
 
 model Project {
   id                  String                @id @default(uuid())
+  applicantId         String
+  applicant           Applicant             @relation(fields: [applicantId], references: [id])
   titlt               String
   demoLink            String
   sourceCode          String
