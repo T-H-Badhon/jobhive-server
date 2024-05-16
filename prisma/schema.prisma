@@ -138,6 +138,7 @@ model Applicant {
   address          String
   employmentStatus EmploymentStatus
   graduated        Boolean
+  resumeLink       String?
   isDeleted        Boolean          @default(false)
   createdAt        DateTime         @default(now())
   updatedAt        DateTime         @updatedAt
@@ -146,6 +147,7 @@ model Applicant {
   educationalQualification EducationalQualification[]
   WorkExperience           WorkExperience[]
   project                  Project[]
+  AppliedJob               AppliedJob[]
 
   @@map("applicants")
 }
@@ -181,7 +183,7 @@ model Project {
   id                  String                @id @default(uuid())
   applicantId         String
   applicant           Applicant             @relation(fields: [applicantId], references: [id])
-  titlt               String
+  title               String
   demoLink            String
   sourceCode          String
   description         String
@@ -218,6 +220,33 @@ model ProjectTechnologies {
   @@map("projectTechnologies")
 }
 
+model Job {
+  id               String         @id @default(uuid())
+  company          String
+  position         String
+  vacancy          Int
+  location         String
+  experience       Int            @default(0)
+  deadline         DateTime
+  salary           Int
+  employmentType   EmploymentType
+  requirement      String
+  responsibilities String
+  createdAt        DateTime       @default(now())
+  updatedAt        DateTime       @updatedAt
+  AppliedJob       AppliedJob[]
+}
+
+model AppliedJob {
+  applicantId String
+  applicant   Applicant @relation(fields: [applicantId], references: [id])
+
+  jobId String
+  job   Job    @relation(fields: [jobId], references: [id])
+
+  @@id([applicantId, jobId])
+}
+
 //enums......................
 enum UserRoles {
   SUPERADMIN
@@ -238,4 +267,10 @@ enum UserStatus {
 enum EmploymentStatus {
   WORKING
   UNEMPLOYED
+}
+
+enum EmploymentType {
+  FULL_TIME
+  PART_TIME
+  CONTRUCTUAL
 }

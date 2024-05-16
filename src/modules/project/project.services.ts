@@ -24,20 +24,25 @@ const addProject = async (email: string, payload: any) => {
     if (!project) {
       throw new AppError(httpStatus.FAILED_DEPENDENCY, "project add failed");
     }
-    const tech = technologies.map((technology: any) => {
-      return { projectId: project.id, technologyId: technology.id };
-    });
-    const techData = await tx.projectTechnologies.createMany({
-      data: tech,
-    });
 
-    const featuresData = features.map((feature: any) => {
-      return {
-        ...feature,
-        projectId: project.id,
-      };
-    });
-    const fData = await tx.features.createMany({ data: featuresData });
+    if (technologies && technologies.length > 0) {
+      const tech = technologies.map((technologyId: string) => {
+        return { projectId: project.id, technologyId: technologyId };
+      });
+      const techData = await tx.projectTechnologies.createMany({
+        data: tech,
+      });
+    }
+
+    if (features && features.length > 0) {
+      const featuresData = features?.map((feature: string) => {
+        return {
+          feature: feature,
+          projectId: project.id,
+        };
+      });
+      const fData = await tx.features.createMany({ data: featuresData });
+    }
 
     return project;
   });
@@ -78,7 +83,32 @@ const getAllProjects = async (email: string) => {
   return projects;
 };
 
+const updateProject = async (projectId: string, payload: any) => {
+  const currentProject = await prisma.project.findUnique({
+    where: { id: projectId },
+    include: {
+      projectTechnologies: {
+        include: {
+          technology: true,
+        },
+      },
+      features: true,
+    },
+  });
+
+  console.log(currentProject);
+};
+
+const deleteProject = async (projectId: string) => {
+  const deletedData = await prisma.project.delete({
+    where: { id: projectId },
+  });
+  return deletedData;
+};
+
 export const projectServices = {
   addProject,
   getAllProjects,
+  updateProject,
+  deleteProject,
 };
