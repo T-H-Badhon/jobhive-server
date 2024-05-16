@@ -7,7 +7,7 @@ const router = Router();
 
 router.post(
   "/add",
-
+  auth(UserRoles.MODERATOR, UserRoles.ADMIN),
   technologyControllers.addTechnology
 );
 

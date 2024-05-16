@@ -21,6 +21,7 @@ router.post(
   "/create-admin",
   fileUpload.upload.single("file"),
   formdataModifier(),
+  auth(UserRoles.SUPERADMIN, UserRoles.ADMIN),
   zodValidation(zodAdminCreateSchema),
   userControllers.createAdmin
 );
@@ -67,13 +68,13 @@ router.post(
 
 router.get(
   "/",
-  auth(UserRoles.ADMIN, UserRoles.MODERATOR),
+  auth(UserRoles.ADMIN, UserRoles.MODERATOR, UserRoles.SUPERADMIN),
   userControllers.allUser
 );
 
 router.patch(
   "/change-status/:id",
-  auth(UserRoles.ADMIN, UserRoles.MODERATOR),
+  auth(UserRoles.ADMIN, UserRoles.MODERATOR, UserRoles.SUPERADMIN),
   zodValidation(zodChangeStatusSchema),
   userControllers.changeStatus
 );

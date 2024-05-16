@@ -12,6 +12,10 @@ router.patch(
   auth(UserRoles.APPLICANT),
   projectControllers.updateProject
 );
-router.delete("/delete/:id", projectControllers.deleteProject);
+router.delete(
+  "/delete/:id",
+  auth(UserRoles.APPLICANT),
+  projectControllers.deleteProject
+);
 
 export const projectRoutes = router;
