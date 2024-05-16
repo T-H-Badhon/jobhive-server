@@ -3,7 +3,7 @@ import {
   Applicant,
   Company,
   Interviewer,
-  Modaretor,
+  Moderator,
   Prisma,
   PrismaClient,
   Selector,
@@ -62,7 +62,7 @@ const createAdmin = async (payload: any, photoDirectory: string) => {
   return { admin: result };
 };
 
-const createModaretor = async (payload: any, photoDirectory: string) => {
+const createModerator = async (payload: any, photoDirectory: string) => {
   const photolink = (await fileUpload.upload_to_cloudinary(
     photoDirectory
   )) as string;
@@ -73,10 +73,10 @@ const createModaretor = async (payload: any, photoDirectory: string) => {
   const userData = {
     password: hashPassword,
     email: payload.email,
-    role: UserRoles.MODARETOR,
+    role: UserRoles.MODERATOR,
   };
 
-  const modaretorData = {
+  const moderatorData = {
     name: payload.name,
     email: payload.email,
     contactNo: payload.contactNo,
@@ -93,14 +93,14 @@ const createModaretor = async (payload: any, photoDirectory: string) => {
       data: userData,
     });
 
-    const modaretor = await tx.modaretor.create({
-      data: modaretorData,
+    const moderator = await tx.moderator.create({
+      data: moderatorData,
     });
 
-    return modaretor;
+    return moderator;
   });
 
-  return { modaretor: result };
+  return { moderator: result };
 };
 
 const createInterviewer = async (payload: any, photoDirectory: string) => {
@@ -289,7 +289,7 @@ const allUsers = async (query: any) => {
       createdAt: true,
       updatedAt: true,
       admin: true,
-      modaretor: true,
+      moderator: true,
     },
     // include: {
     //   admin: true, //include and select are not work togather
@@ -331,7 +331,7 @@ const changeStatus = async (
       "You are not authorized to change status of this user"
     );
   }
-  if (userData.role == UserRoles.ADMIN && role == UserRoles.MODARETOR) {
+  if (userData.role == UserRoles.ADMIN && role == UserRoles.MODERATOR) {
     throw new AppError(
       httpStatus.FORBIDDEN,
       "You are not authorized to change status of this user"
@@ -350,7 +350,7 @@ const changeStatus = async (
 
 export const userServices = {
   createAdmin,
-  createModaretor,
+  createModerator,
   createInterviewer,
   createSelector,
   createApplicant,

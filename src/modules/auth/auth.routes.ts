@@ -21,7 +21,7 @@ router.post(
     UserRoles.APPLICANT,
     UserRoles.COMPANY,
     UserRoles.INTERVIEWER,
-    UserRoles.MODARETOR,
+    UserRoles.MODERATOR,
     UserRoles.SELECTOR,
     UserRoles.SUPERADMIN
   ),

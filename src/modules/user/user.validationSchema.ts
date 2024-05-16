@@ -15,7 +15,7 @@ export const zodAdminCreateSchema = z.object({
   }),
 });
 
-export const zodModaretorCreateSchema = z.object({
+export const zodModeratorCreateSchema = z.object({
   body: z.object({
     email: z.string(),
     password: z.string(),

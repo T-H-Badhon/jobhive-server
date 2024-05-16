@@ -22,17 +22,17 @@ const createAdmin = async (req: Request, res: Response) => {
   }
 };
 
-const createModaretor = async (req: Request, res: Response) => {
+const createModerator = async (req: Request, res: Response) => {
   try {
     const payload = req.body;
     const photoDirectory = req.file?.path || "";
 
-    const result = await userServices.createModaretor(payload, photoDirectory);
+    const result = await userServices.createModerator(payload, photoDirectory);
 
     response(res, {
       statusCode: httpStatus.OK,
       success: true,
-      message: "modaretor created",
+      message: "moderator created",
       data: result,
     });
   } catch (err) {
@@ -152,7 +152,7 @@ const changeStatus = catchAsync(
 
 export const userControllers = {
   createAdmin,
-  createModaretor,
+  createModerator,
   createInterviewer,
   createSelector,
   createApplicant,

@@ -11,7 +11,7 @@ import {
   zodChangeStatusSchema,
   zodCompanyCreateSchema,
   zodInterviewerCreateSchema,
-  zodModaretorCreateSchema,
+  zodModeratorCreateSchema,
   zodSelectorCreateSchema,
 } from "./user.validationSchema";
 
@@ -25,18 +25,18 @@ router.post(
   userControllers.createAdmin
 );
 router.post(
-  "/create-modaretor",
+  "/create-moderator",
   fileUpload.upload.single("file"),
   formdataModifier(),
   auth(UserRoles.ADMIN),
-  zodValidation(zodModaretorCreateSchema),
-  userControllers.createModaretor
+  zodValidation(zodModeratorCreateSchema),
+  userControllers.createModerator
 );
 router.post(
   "/create-interviewer",
   fileUpload.upload.single("file"),
   formdataModifier(),
-  auth(UserRoles.ADMIN, UserRoles.MODARETOR),
+  auth(UserRoles.ADMIN, UserRoles.MODERATOR),
   zodValidation(zodInterviewerCreateSchema),
   userControllers.createInterviewer
 );
@@ -44,7 +44,7 @@ router.post(
   "/create-selector",
   fileUpload.upload.single("file"),
   formdataModifier(),
-  auth(UserRoles.ADMIN, UserRoles.MODARETOR),
+  auth(UserRoles.ADMIN, UserRoles.MODERATOR),
   zodValidation(zodSelectorCreateSchema),
   userControllers.createSelector
 );
@@ -67,13 +67,13 @@ router.post(
 
 router.get(
   "/",
-  auth(UserRoles.ADMIN, UserRoles.MODARETOR),
+  auth(UserRoles.ADMIN, UserRoles.MODERATOR),
   userControllers.allUser
 );
 
 router.patch(
   "/change-status/:id",
-  auth(UserRoles.ADMIN, UserRoles.MODARETOR),
+  auth(UserRoles.ADMIN, UserRoles.MODERATOR),
   zodValidation(zodChangeStatusSchema),
   userControllers.changeStatus
 );

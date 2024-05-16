@@ -15,7 +15,7 @@ router.get("/", technologyControllers.getAllTechnologies);
 
 router.delete(
   "/delete/:id",
-  auth(UserRoles.ADMIN, UserRoles.MODARETOR),
+  auth(UserRoles.ADMIN, UserRoles.MODERATOR),
   technologyControllers.deleteTechnology
 );
 

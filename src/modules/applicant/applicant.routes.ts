@@ -20,7 +20,7 @@ router.get(
   auth(
     UserRoles.ADMIN,
     UserRoles.INTERVIEWER,
-    UserRoles.MODARETOR,
+    UserRoles.MODERATOR,
     UserRoles.SELECTOR
   ),
   applicantControllers.allApplicants
@@ -33,7 +33,7 @@ router.get(
   auth(
     UserRoles.ADMIN,
     UserRoles.INTERVIEWER,
-    UserRoles.MODARETOR,
+    UserRoles.MODERATOR,
     UserRoles.SELECTOR
   ),
   applicantControllers.oneApplicant
