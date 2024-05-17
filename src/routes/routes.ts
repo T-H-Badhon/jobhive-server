@@ -6,6 +6,7 @@ import { authRoutes } from "../modules/auth/auth.routes";
 import { applicantRoutes } from "../modules/applicant/applicant.routes";
 import { technologyRoutes } from "../modules/technology/technology.routes";
 import { skillRoutes } from "../modules/skill/skill.routes";
+import { jobRoutes } from "../modules/job/job.routes";
 
 const router = Router();
 
@@ -15,5 +16,6 @@ router.use("/auth", authRoutes);
 router.use("/applicant", applicantRoutes);
 router.use("/technologies", technologyRoutes);
 router.use("/skills", skillRoutes);
+router.use("/jobs", jobRoutes);
 
 export default router;
