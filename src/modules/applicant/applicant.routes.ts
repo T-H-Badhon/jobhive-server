@@ -8,12 +8,14 @@ import { applicantControllers } from "./applicant.controllers";
 import { qualificationRoutes } from "../EducationalQualification/qualification.router";
 import { experienceRoutes } from "../workExperience/experience.routes";
 import { projectRoutes } from "../project/project.routes";
+import { skillRoutes } from "../skill/skill.routes";
 
 const router = Router();
 
 router.use("/qualifications", qualificationRoutes);
 router.use("/experiences", experienceRoutes);
 router.use("/projects", projectRoutes);
+router.use("/skills", skillRoutes);
 
 router.get(
   "/",

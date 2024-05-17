@@ -148,6 +148,7 @@ model Applicant {
   WorkExperience           WorkExperience[]
   project                  Project[]
   AppliedJob               AppliedJob[]
+  applicantSkill           ApplicantSkill[]
 
   @@map("applicants")
 }
@@ -197,8 +198,20 @@ model Technology {
   id                  String                @id @default(uuid())
   name                String                @unique
   projectTechnologies ProjectTechnologies[]
+  applicantSkill      ApplicantSkill[]
 
   @@map("technology")
+}
+
+model ApplicantSkill {
+  applicantId String
+  applicant   Applicant @relation(fields: [applicantId], references: [id])
+
+  technologyId String
+  technology   Technology @relation(fields: [technologyId], references: [id])
+
+  @@id([applicantId, technologyId])
+  @@map("applicantSkill")
 }
 
 model Features {
